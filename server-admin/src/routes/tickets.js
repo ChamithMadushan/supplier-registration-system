@@ -126,6 +126,13 @@ router.get(
   }),
 )
 
+const STATUSES = ['open', 'pending', 'replied', 'resolved', 'closed']
+
+function notifySupplier(userId, title, message, type = 'info') {
+  if (!userId) return
+  run('INSERT INTO notifications (user_id, title, message, type) VALUES (?, ?, ?, ?)', [userId, title, message, type])
+}
+
 router.post(
   '/tickets/:id/reply',
   asyncHandler(async (req, res) => {
@@ -138,6 +145,13 @@ router.post(
     run("INSERT INTO ticket_messages (ticket_id, body, is_admin) VALUES (?, ?, 1)", [id, body])
     run("UPDATE tickets SET status = 'replied', updated_at = datetime('now') WHERE id = ?", [id])
 
+    notifySupplier(
+      ticket.user_id,
+      'Support replied to your ticket',
+      `Your ticket "TS-${String(id).padStart(4, '0')}" has a new reply.`,
+      'info',
+    )
+
     run(
       `INSERT INTO audit_logs (user, role, action, module, entity, ip, detail, success)
        VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
@@ -145,6 +159,37 @@ router.post(
     )
 
     res.json({ message: 'Reply sent' })
+  }),
+)
+
+router.patch(
+  '/tickets/:id/status',
+  asyncHandler(async (req, res) => {
+    const id = Number(req.params.id)
+    const status = cleanText(req.body.status)
+    if (!STATUSES.includes(status)) return res.status(400).json({ error: 'Invalid status' })
+
+    const ticket = get('SELECT * FROM tickets WHERE id = ?', [id])
+    if (!ticket) return res.status(404).json({ error: 'Ticket not found' })
+
+    run("UPDATE tickets SET status = ?, updated_at = datetime('now') WHERE id = ?", [status, id])
+
+    notifySupplier(
+      ticket.user_id,
+      `Your ticket TS-${String(id).padStart(4, '0')} is ${status}`,
+      status === 'resolved'
+        ? 'Your issue has been resolved. You can reopen it anytime if needed.'
+        : `Your ticket status changed to ${status}.`,
+      status === 'resolved' ? 'success' : 'info',
+    )
+
+    run(
+      `INSERT INTO audit_logs (user, role, action, module, entity, ip, detail, success)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
+      [req.admin.email, req.admin.role, 'status', 'ticket', 'TS-' + String(id).padStart(4, '0'), req.ip, `Ticket marked ${status}`],
+    )
+
+    res.json({ message: 'Status updated', status })
   }),
 )
 

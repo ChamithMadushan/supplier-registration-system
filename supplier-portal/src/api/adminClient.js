@@ -118,6 +118,7 @@ export const adminApi = {
   },
   ticket: (id) => request(`/tickets/${id}`),
   replyTicket: (id, body) => request(`/tickets/${id}/reply`, { method: 'POST', body }),
+  updateTicketStatus: (id, status) => request(`/tickets/${id}/status`, { method: 'PATCH', body: { status } }),
 
   // notifications
   notifications: () => request('/notifications'),

@@ -99,6 +99,7 @@ export const api = {
   createTicket: (body) => request('/tickets', { method: 'POST', body }),
   ticket: (id) => request(`/tickets/${id}`),
   replyTicket: (id, body) => request(`/tickets/${id}/messages`, { method: 'POST', body }),
+  updateTicketStatus: (id, status) => request(`/tickets/${id}/status`, { method: 'PATCH', body: { status } }),
 
   // search
   search: (q) => request(`/search?q=${encodeURIComponent(q)}`),

@@ -69,6 +69,46 @@ const businessTypes = [
 
 const employeeRanges = ['1 - 10', '11 - 50', '51 - 200', '201 - 500', '500+']
 
+export const SL_DISTRICTS = [
+  { name: 'Colombo', province: 'Western Province' },
+  { name: 'Gampaha', province: 'Western Province' },
+  { name: 'Kalutara', province: 'Western Province' },
+  { name: 'Kandy', province: 'Central Province' },
+  { name: 'Matale', province: 'Central Province' },
+  { name: 'Nuwara Eliya', province: 'Central Province' },
+  { name: 'Galle', province: 'Southern Province' },
+  { name: 'Matara', province: 'Southern Province' },
+  { name: 'Hambantota', province: 'Southern Province' },
+  { name: 'Jaffna', province: 'Northern Province' },
+  { name: 'Kilinochchi', province: 'Northern Province' },
+  { name: 'Mannar', province: 'Northern Province' },
+  { name: 'Vavuniya', province: 'Northern Province' },
+  { name: 'Mullaitivu', province: 'Northern Province' },
+  { name: 'Trincomalee', province: 'Eastern Province' },
+  { name: 'Batticaloa', province: 'Eastern Province' },
+  { name: 'Ampara', province: 'Eastern Province' },
+  { name: 'Kurunegala', province: 'North Western Province' },
+  { name: 'Puttalam', province: 'North Western Province' },
+  { name: 'Anuradhapura', province: 'North Central Province' },
+  { name: 'Polonnaruwa', province: 'North Central Province' },
+  { name: 'Ratnapura', province: 'Sabaragamuwa Province' },
+  { name: 'Kegalle', province: 'Sabaragamuwa Province' },
+  { name: 'Badulla', province: 'Uva Province' },
+  { name: 'Monaragala', province: 'Uva Province' },
+]
+
+export const SL_PROVINCES = [
+  'Western Province',
+  'Central Province',
+  'Southern Province',
+  'Northern Province',
+  'Eastern Province',
+  'North Western Province',
+  'North Central Province',
+  'Sabaragamuwa Province',
+  'Uva Province',
+]
+
 export default function Profile() {
   const { user, application, refresh } = useAuth()
   const [activeTab, setActiveTab] = useState('company')
@@ -116,6 +156,12 @@ export default function Profile() {
   }
 
   const setBasicField = (key) => (e) => setBasicForm((f) => ({ ...f, [key]: e.target.value }))
+
+  const setRegDistrict = (e) => {
+    const district = e.target.value
+    const province = SL_DISTRICTS.find((d) => d.name === district)?.province || ''
+    setBasicForm((f) => ({ ...f, regDistrict: district, regProvince: province }))
+  }
 
   const submitCompanyForm = async (close, successMsg) => {
     setSaving(true)
@@ -671,8 +717,14 @@ export default function Profile() {
           </div>
           <Field label="Address Line 2" value={basicForm?.regAddress2} onChange={setBasicField('regAddress2')} />
           <Field label="City" value={basicForm?.regCity} onChange={setBasicField('regCity')} />
-          <Field label="District" value={basicForm?.regDistrict} onChange={setBasicField('regDistrict')} />
-          <Field label="Province" value={basicForm?.regProvince} onChange={setBasicField('regProvince')} />
+          <Field label="District" as="select" value={basicForm?.regDistrict || ''} onChange={setRegDistrict}>
+            <option value="">Select district</option>
+            {SL_DISTRICTS.map((d) => <option key={d.name} value={d.name}>{d.name}</option>)}
+          </Field>
+          <Field label="Province" as="select" value={basicForm?.regProvince || ''} onChange={setBasicField('regProvince')}>
+            <option value="">Select province</option>
+            {SL_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
+          </Field>
           <Field label="Postal Code" value={basicForm?.regPostalCode} onChange={setBasicField('regPostalCode')} />
         </div>
       </Modal>
