@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Building2, CheckCircle2, Package, Zap } from 'lucide-react'
+import Reveal from '../ui/Reveal'
+import { useLanguage } from '../../i18n/LanguageContext'
 
-const stats = [
-  { value: 500, suffix: '+', label: 'Registered Suppliers', icon: Building2 },
-  { value: 400, suffix: '+', label: 'Approved Vendors', icon: CheckCircle2 },
-  { value: 15, suffix: '', label: 'Supply Categories', icon: Package },
-  { value: 15, prefix: '', suffix: ' Days', label: 'Average Processing Time', icon: Zap },
-]
+const icons = [Building2, CheckCircle2, Package, Zap]
 
 function Counter({ value, suffix, prefix = '' }) {
   const ref = useRef(null)
@@ -47,25 +44,24 @@ function Counter({ value, suffix, prefix = '' }) {
 }
 
 export default function Stats() {
+  const { t } = useLanguage()
+  const stats = t('stats.items')
   return (
-    <section id="stats" className="relative bg-white py-16 sm:py-20">
+    <section id="stats" className="relative lp-bg-alt py-16 sm:py-20">
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" aria-hidden="true" />
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className={`flex flex-col items-center text-center px-6 py-8 transition-all duration-200 hover:shadow-[var(--shadow-card)] hover:-translate-y-1 rounded-[12px] group ${
-                i > 0 ? 'border-l border-line-soft' : ''
-              } ${i >= 2 ? 'lg:border-t-0 border-t border-line-soft' : ''} ${
-                i === 2 ? 'lg:border-l' : ''
-              }`}
-            >
-              <span className="w-12 h-12 rounded-full bg-accent/10 text-accent flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <s.icon size={24} />
-              </span>
-              <Counter value={s.value} suffix={s.suffix} prefix={s.prefix} />
-              <p className="mt-2 text-sm font-medium text-ink-muted">{s.label}</p>
-            </div>
+            <Reveal key={s.label} delay={i * 120} className="h-full">
+              <div className="lp-glass lp-glass-hover h-full flex flex-col items-center text-center px-6 py-9 rounded-[18px] group">
+                <span className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="absolute inset-0 rounded-2xl bg-accent/20 anim-pulse-ring" aria-hidden="true" />
+                  {(() => { const Icon = icons[i]; return <Icon size={24} className="relative" /> })()}
+                </span>
+                <Counter value={s.value} suffix={s.suffix} prefix={s.prefix} />
+                <p className="mt-2 text-sm font-medium lp-muted">{s.label}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>

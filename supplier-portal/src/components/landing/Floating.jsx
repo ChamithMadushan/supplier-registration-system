@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUp, Cookie, X } from 'lucide-react'
+import { usePrivacyPolicy } from './PrivacyPolicy'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 export function WhatsAppButton() {
+  const { t } = useLanguage()
   return (
     <a
       href="#"
-      aria-label="Chat on WhatsApp"
+      aria-label={t('floating.whatsapp')}
       className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-[0_8px_24px_rgba(37,211,102,0.45)] hover:scale-110 transition-transform"
     >
       <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -17,6 +20,7 @@ export function WhatsAppButton() {
 }
 
 export function BackToTop() {
+  const { t } = useLanguage()
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 400)
@@ -26,7 +30,7 @@ export function BackToTop() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      aria-label="Back to top"
+      aria-label={t('floating.backToTop')}
       className={`fixed bottom-6 right-24 z-40 w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center shadow-[0_4px_12px_rgba(241,143,1,0.4)] hover:bg-accent-hover transition-all duration-300 ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
@@ -37,12 +41,14 @@ export function BackToTop() {
 }
 
 export function CookieConsent() {
+  const { t } = useLanguage()
   const [visible, setVisible] = useState(false)
   const [accepted, setAccepted] = useState(false)
+  const { openPrivacyPolicy } = usePrivacyPolicy()
   useEffect(() => {
     if (!localStorage.getItem('cookie-accepted')) {
-      const t = setTimeout(() => setVisible(true), 1500)
-      return () => clearTimeout(t)
+      const timeout = setTimeout(() => setVisible(true), 1500)
+      return () => clearTimeout(timeout)
     }
   }, [])
   const choose = (val) => {
@@ -62,27 +68,32 @@ export function CookieConsent() {
             <Cookie size={18} />
           </span>
           <p className="text-[13px] text-white/80 leading-relaxed">
-            We use cookies to improve your experience and analyze portal usage. By continuing, you
-            agree to our use of cookies.
+            {t('floating.cookie')}
           </p>
         </div>
         <div className="flex items-center gap-2.5 shrink-0">
           <button
+            onClick={openPrivacyPolicy}
+            className="px-3 py-2 rounded-[8px] text-[13px] font-medium text-white/60 hover:text-white underline decoration-dotted underline-offset-4 transition-colors"
+          >
+            {t('privacy.title')}
+          </button>
+          <button
             onClick={() => choose('declined')}
             className="px-4 py-2 rounded-[8px] text-[13px] font-medium text-white/70 hover:text-white hover:bg-white/10 transition-colors"
           >
-            Decline
+            {t('floating.decline')}
           </button>
           <button
             onClick={() => choose('accepted')}
             className="px-5 py-2 rounded-[8px] bg-accent text-white text-[13px] font-semibold hover:bg-accent-hover transition-colors"
           >
-            Accept
+            {t('floating.accept')}
           </button>
         </div>
         {accepted && (
           <button
-            aria-label="Close"
+            aria-label={t('floating.close')}
             className="absolute top-3 right-3 text-white/50 hover:text-white"
             onClick={() => setVisible(false)}
           >
@@ -95,19 +106,20 @@ export function CookieConsent() {
 }
 
 export function MobileCTABar() {
+  const { t } = useLanguage()
   return (
-    <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-line-soft shadow-[0_-4px_16px_rgba(0,0,0,0.08)] p-3 flex gap-3">
+    <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 lp-glass bg-[#060a13]/85 border-t border-white/10 backdrop-blur-xl shadow-[0_-8px_32px_rgba(0,0,0,0.5)] p-3 flex gap-3">
       <Link
         to="/register/step-1"
-        className="flex-1 px-5 py-3 rounded-[8px] text-center text-sm font-semibold border-2 border-primary text-primary"
+        className="flex-1 px-5 py-3 rounded-[10px] text-center text-sm font-semibold border border-white/15 text-white"
       >
-        Login
+        {t('nav.login')}
       </Link>
       <Link
         to="/register/step-1"
-        className="flex-[1.4] px-5 py-3 rounded-[8px] text-center text-sm font-semibold bg-accent text-white shadow-[0_4px_12px_rgba(241,143,1,0.3)]"
+        className="lp-btn-accent flex-[1.4] px-5 py-3 rounded-[10px] text-center text-sm font-semibold text-white"
       >
-        Register Now
+        {t('nav.registerNow')}
       </Link>
     </div>
   )

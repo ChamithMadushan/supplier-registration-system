@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function Logo({ dark = false, size = 'md', as: Tag = Link, to = '/' }) {
+export default function Logo({ dark = false, size = 'md', as: Tag = Link, to = '/', brand = 'Supplier Portal' }) {
   const textSize = size === 'lg' ? 'text-xl' : size === 'sm' ? 'text-sm' : 'text-lg'
   const subText = dark ? 'text-white/50' : 'text-ink-muted'
   return (
@@ -14,9 +14,9 @@ export default function Logo({ dark = false, size = 'md', as: Tag = Link, to = '
       </span>
       <span className="leading-tight">
         <span
-          className={`block font-heading font-bold ${textSize} ${dark ? 'text-white' : 'text-primary'}`}
+          className={`block font-heading font-bold tracking-wide ${textSize} ${dark ? 'text-white' : 'text-primary'}`}
         >
-          Supplier Portal
+          {brand}
         </span>
         <span className={`block text-[10px] font-medium tracking-[0.18em] uppercase ${subText}`}>
           Sri Lanka Procurement

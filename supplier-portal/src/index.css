@@ -203,3 +203,210 @@ h1, h2, h3, h4, h5, h6 {
   background-size: 400px 100%;
   animation: shimmer 1.4s ease infinite;
 }
+
+/* ---------- Marquee ---------- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+.marquee-paused:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ---------- Animated gradient text ---------- */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.anim-gradient-text {
+  background-image: linear-gradient(90deg, #F18F01, #ffd17a, #F18F01, #ff8a3d);
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 6s ease infinite;
+}
+
+/* ---------- Pulse ring ---------- */
+.anim-pulse-ring { animation: pulseRing 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+
+/* ---------- Line draw-in ---------- */
+@keyframes drawX {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes drawY {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+.anim-draw-x {
+  transform-origin: left center;
+  animation: drawX 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+.anim-draw-y {
+  transform-origin: top center;
+  animation: drawY 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+/* ---------- Button shimmer sweep ---------- */
+.btn-shimmer { position: relative; overflow: hidden; }
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+}
+.btn-shimmer:hover::after { left: 150%; }
+
+/* ---------- Arrow slide on hover ---------- */
+.group:hover .anim-arrow { transform: translateX(4px); }
+.anim-arrow { transition: transform 0.25s ease; }
+
+/* ---------- Soft glow pulse ---------- */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 4px 12px rgba(241,143,1,0.3); }
+  50% { box-shadow: 0 6px 22px rgba(241,143,1,0.55); }
+}
+.anim-glow { animation: glowPulse 3s ease-in-out infinite; }
+
+/* ---------- Tilt on hover for cards ---------- */
+.hover-tilt { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.hover-tilt:hover { transform: translateY(-4px) scale(1.015); }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .anim-float, .anim-float-slow, .anim-bounce-down, .anim-pulse-ring,
+  .anim-gradient-text, .anim-glow, .marquee-track, .anim-draw-x, .anim-draw-y {
+    animation: none !important;
+  }
+  .btn-shimmer::after { transition: none !important; }
+  .reveal { transition: none !important; }
+}
+
+/* ================================================================
+   Dark premium landing theme (glassmorphism)
+   Scoped to landing components; portal/admin keep their light theme
+   ================================================================ */
+.lp-bg-base { background-color: #060a13; }
+.lp-bg-alt { background-color: #0a1220; }
+.lp-bg-deep { background-color: #04070d; }
+
+.lp-text { color: rgba(255, 255, 255, 0.92); }
+.lp-muted { color: rgba(255, 255, 255, 0.62); }
+.lp-faint { color: rgba(255, 255, 255, 0.42); }
+
+.lp-glass {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.lp-glass-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.lp-glass-hover:hover {
+  transform: translateY(-5px);
+  border-color: rgba(241, 143, 1, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.45), 0 0 32px rgba(241, 143, 1, 0.1);
+}
+
+.lp-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+}
+.lp-chip-accent {
+  background: rgba(241, 143, 1, 0.12);
+  border: 1px solid rgba(241, 143, 1, 0.35);
+  color: #ffc66e;
+}
+
+/* Grid + noise backgrounds */
+.lp-grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.lp-grid-fade {
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* Aurora glow blobs */
+.lp-aurora-orange {
+  background: radial-gradient(closest-side, rgba(241, 143, 1, 0.32), transparent);
+  filter: blur(60px);
+}
+.lp-aurora-teal {
+  background: radial-gradient(closest-side, rgba(46, 134, 171, 0.34), transparent);
+  filter: blur(60px);
+}
+.lp-aurora-violet {
+  background: radial-gradient(closest-side, rgba(124, 77, 255, 0.28), transparent);
+  filter: blur(60px);
+}
+
+/* Gradient heading accent */
+.lp-gradient-text {
+  background-image: linear-gradient(120deg, #ffc66e 0%, #F18F01 45%, #ff8a3d 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Buttons */
+.lp-btn-accent,
+.lp-btn-ghost { position: relative; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, filter 0.2s ease; }
+.lp-btn-accent {
+  background: linear-gradient(135deg, #F18F01, #ffb44d);
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(241, 143, 1, 0.35);
+}
+.lp-btn-accent:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 36px rgba(241, 143, 1, 0.5);
+}
+.lp-btn-ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+.lp-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Section eyebrow label */
+.lp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ffb44d;
+}
+.lp-eyebrow::before {
+  content: '';
+  width: 22px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #F18F01);
+}
